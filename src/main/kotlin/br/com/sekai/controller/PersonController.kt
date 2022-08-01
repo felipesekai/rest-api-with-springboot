@@ -1,7 +1,7 @@
 package br.com.sekai.controller
 
-import br.com.sekai.model.Person
-import br.com.sekai.exceptions.services.PersonServices
+import br.com.sekai.data.vo.v1.PersonVO
+import br.com.sekai.services.PersonServices
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -14,8 +14,9 @@ class PersonController {
     @Autowired
     private lateinit var service: PersonServices
 
+
     @GetMapping("/all", produces = [MediaType.APPLICATION_JSON_VALUE])
-    fun findAll(): List<Person> {
+    fun findAll(): List<PersonVO> {
         return service.findAll()
     }
 
@@ -23,7 +24,7 @@ class PersonController {
     fun findByid(
         @PathVariable(value = "id")
         id: Long
-    ): Person {
+    ): PersonVO {
         return service.findById(id)
     }
 
@@ -31,7 +32,7 @@ class PersonController {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun insertPeople(@RequestBody person: Person): Person {
+    fun insertPeople(@RequestBody person: PersonVO): PersonVO {
         return service.insertPeople(person)
     }
 
@@ -39,7 +40,7 @@ class PersonController {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun update(@RequestBody person: Person): Person {
+    fun update(@RequestBody person: PersonVO): PersonVO {
         return service.update(person)
     }
 
