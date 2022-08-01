@@ -1,5 +1,7 @@
-package br.com.sekai.exceptions
+package br.com.sekai.exceptions.handler
 
+import br.com.sekai.exceptions.ExceptionsResponse
+import br.com.sekai.exceptions.ResourceNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -16,7 +18,7 @@ class CustomizedResponseEntityExceptionHandler : ResponseEntityExceptionHandler(
 
     @ExceptionHandler(Exception::class)
     fun handleAllExceptions(e: Exception, request: WebRequest)
-    : ResponseEntity<ExceptionsResponse>{
+    : ResponseEntity<ExceptionsResponse> {
         val exceptionsResponse = ExceptionsResponse(
             Date(),
             e.message,
@@ -24,14 +26,14 @@ class CustomizedResponseEntityExceptionHandler : ResponseEntityExceptionHandler(
         )
         return ResponseEntity<ExceptionsResponse>(exceptionsResponse, HttpStatus.INTERNAL_SERVER_ERROR)
     }
-    @ExceptionHandler(UnsupportedMAthOperationException::class)
-    fun handleBadRequest(e: Exception, request: WebRequest)
-    : ResponseEntity<ExceptionsResponse>{
+    @ExceptionHandler(ResourceNotFoundException::class)
+    fun handleResourceNotFoundException(e: Exception, request: WebRequest)
+    : ResponseEntity<ExceptionsResponse> {
         val exceptionsResponse = ExceptionsResponse(
             Date(),
             e.message,
             request.getDescription(false)
         )
-        return ResponseEntity<ExceptionsResponse>(exceptionsResponse, HttpStatus.BAD_REQUEST)
+        return ResponseEntity<ExceptionsResponse>(exceptionsResponse, HttpStatus.NOT_FOUND)
     }
 }
