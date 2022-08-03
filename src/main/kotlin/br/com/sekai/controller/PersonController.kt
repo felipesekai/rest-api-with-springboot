@@ -1,6 +1,7 @@
 package br.com.sekai.controller
 
 import br.com.sekai.data.vo.v1.PersonVO
+import br.com.sekai.data.vo.v2.PersonVO as PersonVOV2
 import br.com.sekai.services.PersonServices
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
@@ -32,8 +33,15 @@ class PersonController {
         consumes = [MediaType.APPLICATION_JSON_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun insertPeople(@RequestBody person: PersonVO): PersonVO {
-        return service.insertPeople(person)
+    fun insert(@RequestBody person: PersonVO): PersonVO {
+        return service.insert(person)
+    }
+    @PostMapping( value= ["/v2"],
+        consumes = [MediaType.APPLICATION_JSON_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun createV2(@RequestBody person: PersonVOV2): PersonVOV2 {
+        return service.insertV2(person)
     }
 
     @PutMapping(
