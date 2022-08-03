@@ -26,6 +26,12 @@ class PersonServices {
         logger.info("Finding all People!!")
         return DozerMapper.parseListObjects(repository.findAll(), PersonVO::class.java)
     }
+    fun findAllV2(): List<PersonVOV2> {
+        logger.info("Finding all People!! v2")
+        val list = mapper.mapListEntityToVO(repository.findAll())
+        return DozerMapper.parseListObjects(list, PersonVOV2::class.java)
+
+    }
 
     fun findById(id: Long): PersonVO {
         logger.info("Finding on People!!")
@@ -44,7 +50,7 @@ class PersonServices {
 
     }
     fun insertV2(person: PersonVOV2): PersonVOV2 {
-        logger.info("Creating one People with name ${person.firstName}!!")
+        logger.info("Creating one People v2 with name ${person.firstName}!!")
         val entity: Person = mapper.mapVoToEntity(person)
         return mapper.mapEntityToVo(repository.save(entity))
 

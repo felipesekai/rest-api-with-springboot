@@ -3,7 +3,6 @@ package br.com.sekai.mapper.custom
 import br.com.sekai.data.vo.v2.PersonVO as PersonVOV2
 import br.com.sekai.model.Person
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class PersonMapper {
@@ -16,20 +15,27 @@ class PersonMapper {
         vo.lastName = person.lastName
         vo.address = person.address
         vo.gender = person.gender
-        vo.brithday = Date()
-
+        vo.brithday = person.birthday
         return vo
     }
     fun mapVoToEntity(person: PersonVOV2): Person {
-        val Entity = Person()
+        val entity = Person()
+        entity.id = person.id
+        entity.firstName = person.firstName
+        entity.lastName = person.lastName
+        entity.address = person.address
+        entity.gender = person.gender
+        entity.birthday = person.brithday
+        return entity
+    }
 
-        Entity.id = person.id
-        Entity.firstName = person.firstName
-        Entity.lastName = person.lastName
-        Entity.address = person.address
-        Entity.gender = person.gender
+    fun mapListEntityToVO(person: List<Person>): ArrayList<PersonVOV2> {
+        val entity: ArrayList<PersonVOV2> = ArrayList()
 
+            for (e in person){
+                entity.add(mapEntityToVo(e))
+            }
 
-        return Entity
+        return entity
     }
 }

@@ -1,5 +1,6 @@
 package br.com.sekai.model
 
+import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -20,4 +21,6 @@ data class Person (
 
     @Column (nullable = false, length = 6)
     var gender : String = "",
+    @Column (nullable = true, length = 12)
+    var birthday : String? = null,
         )

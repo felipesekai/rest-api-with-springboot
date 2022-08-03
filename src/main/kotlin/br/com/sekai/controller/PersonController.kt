@@ -21,6 +21,11 @@ class PersonController {
         return service.findAll()
     }
 
+    @GetMapping("/all/v2", produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun findAllV2(): List<PersonVOV2> {
+        return service.findAllV2()
+    }
+
     @GetMapping("/{id}", produces = [MediaType.APPLICATION_JSON_VALUE])
     fun findByid(
         @PathVariable(value = "id")
