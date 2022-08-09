@@ -1,11 +1,13 @@
 package br.com.sekai.services
 
+import br.com.sekai.controller.PersonController
 import br.com.sekai.data.vo.v1.PersonVO
 import br.com.sekai.exceptions.ResourceNotFoundException
 import br.com.sekai.mapper.DozerMapper
 import br.com.sekai.model.Person
 import br.com.sekai.repository.PersonRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo
 import org.springframework.stereotype.Service
 import java.util.logging.Logger
 
@@ -19,36 +21,50 @@ class PersonServices {
 
     fun findAll(): List<PersonVO> {
         logger.info("Finding all People!!")
-        return DozerMapper.parseListObjects(repository.findAll(), PersonVO::class.java)
+        val vos = DozerMapper.parseListObjects(repository.findAll(), PersonVO::class.java)
+        for (person in vos){
+            val withSelfRel = linkTo(PersonController::class.java).slash(person.key).withSelfRel()
+            person.add(withSelfRel)
+        }
+
+        return vos
     }
 
     fun findById(id: Long): PersonVO {
         logger.info("Finding on People!!")
         var person = repository.findById(id)
             .orElseThrow { ResourceNotFoundException("No records found for this ID!") }
-
-        return DozerMapper.parseObject(person, PersonVO::class.java)
+       val  personVO : PersonVO = DozerMapper.parseObject(person, PersonVO::class.java);
+        val withSelfRel = linkTo(PersonController::class.java).slash(personVO.key).withSelfRel()
+        personVO.add(withSelfRel)
+        return personVO
 
     }
 
     fun insertPeople(person: PersonVO): PersonVO {
         logger.info("Creating one People with name ${person.firstName}!!")
         val entity: Person = DozerMapper.parseObject(person, Person::class.java)
-        return DozerMapper.parseObject(repository.save(entity), PersonVO::class.java)
+        val personVO = DozerMapper.parseObject(repository.save(entity), PersonVO::class.java)
+        val withSelfRel = linkTo(PersonController::class.java).slash(personVO.key).withSelfRel()
+        personVO.add(withSelfRel)
+        return personVO
 
 
     }
 
     fun update(person: PersonVO): PersonVO {
-        logger.info("Updating one People with ID ${person.id}!!")
-        val entity = repository.findById(person.id)
+        logger.info("Updating one People with ID ${person.key}!!")
+        val entity = repository.findById(person.key)
             .orElseThrow { ResourceNotFoundException("No records found for this ID!") }
         entity.firstName = person.firstName
         entity.lastName = person.lastName
         entity.address = person.address
         entity.gender = person.gender
 
-        return DozerMapper.parseObject(repository.save(entity), PersonVO::class.java)
+        val personVO = DozerMapper.parseObject(repository.save(entity), PersonVO::class.java)
+        val withSelfRel = linkTo(PersonController::class.java).slash(personVO.key).withSelfRel()
+        personVO.add(withSelfRel)
+        return personVO
     }
 
     fun delete(id: Long) {
