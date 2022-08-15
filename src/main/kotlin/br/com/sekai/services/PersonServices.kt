@@ -2,6 +2,7 @@ package br.com.sekai.services
 
 import br.com.sekai.controller.PersonController
 import br.com.sekai.data.vo.v1.PersonVO
+import br.com.sekai.exceptions.RequiredObjectIsNullException
 import br.com.sekai.exceptions.ResourceNotFoundException
 import br.com.sekai.mapper.DozerMapper
 import br.com.sekai.model.Person
@@ -41,7 +42,8 @@ class PersonServices {
 
     }
 
-    fun insertPeople(person: PersonVO): PersonVO {
+    fun insertPeople(person: PersonVO?): PersonVO {
+        if (person == null) throw  RequiredObjectIsNullException()
         logger.info("Creating one People with name ${person.firstName}!!")
         val entity: Person = DozerMapper.parseObject(person, Person::class.java)
         val personVO = DozerMapper.parseObject(repository.save(entity), PersonVO::class.java)
@@ -52,7 +54,9 @@ class PersonServices {
 
     }
 
-    fun update(person: PersonVO): PersonVO {
+    fun update(person: PersonVO?): PersonVO {
+        if (person == null) throw  RequiredObjectIsNullException()
+
         logger.info("Updating one People with ID ${person.key}!!")
         val entity = repository.findById(person.key)
             .orElseThrow { ResourceNotFoundException("No records found for this ID!") }

@@ -1,6 +1,7 @@
 package br.com.sekai.mockito.services
 
 import br.com.sekai.data.vo.v1.PersonVO
+import br.com.sekai.exceptions.RequiredObjectIsNullException
 import br.com.sekai.repository.PersonRepository
 import br.com.sekai.services.PersonServices
 import br.com.sekai.unittest.mapper.mocks.MockPerson
@@ -35,6 +36,14 @@ internal class PersonServicesTest {
 
     @Test
     fun findAll() {
+        val people = inputObject.mockEntityList()
+        `when`(repository.findAll()).thenReturn(people)
+
+        val result = services.findAll()
+        assertsLists(result, 1)
+        assertsLists(result, 4)
+        assertsLists(result, 7)
+
     }
 
     @Test
@@ -49,6 +58,7 @@ internal class PersonServicesTest {
 
     @Test
     fun insertPeople() {
+
         val entity = inputObject.mockEntity(1)
         val persisted = entity.copy()
         `when`(repository.save(entity)).thenReturn(persisted)
@@ -86,6 +96,34 @@ internal class PersonServicesTest {
 
             }
 
+
+
+    @Test
+    fun insertWithNullPeople() {
+        val exception : Exception = assertThrows(
+            RequiredObjectIsNullException::class.java
+        ) { services.insertPeople(null) }
+
+        val expectedMessage = "It is not allowed to persist a null object"
+        val actualMessage = exception.message
+
+        assertTrue(actualMessage!!.contains(expectedMessage))
+    }
+
+    @Test
+    fun updateWithNull() {
+        val exception : Exception = assertThrows(
+            RequiredObjectIsNullException::class.java
+        ) { services.update(null) }
+
+        val expectedMessage = "It is not allowed to persist a null object"
+        val actualMessage = exception.message
+
+        assertTrue(actualMessage!!.contains(expectedMessage))
+
+
+    }
+
     private fun asserts(result: PersonVO) {
         assertNotNull(result)
         assertNotNull(result.key)
@@ -95,6 +133,18 @@ internal class PersonServicesTest {
         assertEquals("First Name Test${1}", result.firstName)
         assertEquals("Last Name Test${1}", result.lastName)
         assertEquals("Female", result.gender)
+
+    }   private fun assertsLists(people: List<PersonVO>, number: Int) {
+        assertNotNull(people)
+        assertEquals(14, people.size)
+
+        val result = people[number]
+        assertNotNull(result.links)
+        assertTrue(result.links.toString().contains("</api/person/v1/${number}>;rel=\"self\""))
+        assertEquals("Address Test${number}", result.address)
+        assertEquals("First Name Test${number}", result.firstName)
+        assertEquals("Last Name Test${number}", result.lastName)
+
 
     }
 }
