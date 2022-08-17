@@ -1,6 +1,6 @@
 package br.com.sekai.model
 
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "person")
