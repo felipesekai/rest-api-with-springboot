@@ -5,6 +5,7 @@ import br.com.sekai.data.vo.v2.PersonVO as PersonVOV2
 import br.com.sekai.exceptions.ResourceNotFoundException
 import br.com.sekai.mapper.DozerMapper
 import br.com.sekai.mapper.custom.PersonMapper
+import br.com.sekai.mapper.custom.toVO
 import br.com.sekai.model.Person
 import br.com.sekai.repository.PersonRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,6 +30,7 @@ class PersonServices {
     fun findAllV2(): List<PersonVOV2> {
         logger.info("Finding all People!! v2")
         val list = mapper.mapListEntityToVO(repository.findAll())
+        repository.findAll().map { it.toVO() }
         return DozerMapper.parseListObjects(list, PersonVOV2::class.java)
 
     }
