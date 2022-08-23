@@ -27,7 +27,6 @@ class PersonServices {
             val withSelfRel = linkTo(PersonController::class.java).slash(person.key).withSelfRel()
             person.add(withSelfRel)
         }
-
         return vos
     }
 
