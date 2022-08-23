@@ -4,6 +4,7 @@ import br.com.sekai.controller.BooksController
 import br.com.sekai.data.vo.v1.BooksVO
 import br.com.sekai.exceptions.ResourceNotFoundException
 import br.com.sekai.mapper.DozerMapper
+import br.com.sekai.mapper.toEntity
 import br.com.sekai.model.Books
 import br.com.sekai.repository.BooksRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,7 +44,9 @@ class BooksServices {
 
     fun create(booksVO: BooksVO): BooksVO{
         logger.info("Insert new Book!!!")
-        val book: Books = DozerMapper.parseObject(booksVO, Books::class.java)
+//        val book: Books = DozerMapper.parseObject(booksVO, Books::class.java)
+        val book: Books = booksVO.toEntity()
+
         val vo : BooksVO = DozerMapper.parseObject(repository.save(book), BooksVO::class.java)
         val withSelfRel = linkTo(BooksController::class.java).slash(vo.key).withSelfRel()
         vo.add(withSelfRel)
