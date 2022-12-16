@@ -34,7 +34,10 @@ class PersonServices {
         logger.info("Finding on People!!")
         var person = repository.findById(id)
             .orElseThrow { ResourceNotFoundException("No records found for this ID!") }
-       val  personVO : PersonVO = DozerMapper.parseObject(person, PersonVO::class.java);
+
+        person.gender
+
+        val  personVO : PersonVO = DozerMapper.parseObject(person, PersonVO::class.java);
         val withSelfRel = linkTo(PersonController::class.java).slash(personVO.key).withSelfRel()
         personVO.add(withSelfRel)
         return personVO

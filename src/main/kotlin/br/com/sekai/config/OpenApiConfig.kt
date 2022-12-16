@@ -20,7 +20,7 @@ class OpenApiConfig {
                     .description("Some description about your API")
                     .termsOfService("leia aqui")
                     .license(
-                        License().name("SEkai")
+                        License().name("Sekai")
                     )
             )
     }

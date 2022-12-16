@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/books/v1")
-class BooksController {
+class
+BooksController {
 
     @Autowired
     private lateinit var service: BooksServices
